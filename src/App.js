@@ -1,5 +1,14 @@
 import React from "react";
-import "./App.css";
+import { connect } from "react-redux";
+import {
+  loginUser,
+  logoutUser,
+  addHabit,
+  removeHabit,
+  addRecord,
+  removeRecord
+} from "./actions";
+import "./index.css";
 
 class App extends React.Component {
   constructor(props) {
@@ -11,6 +20,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // this.props.fetchData()
     console.log(this.state.habits);
   }
 
@@ -35,7 +45,8 @@ class App extends React.Component {
       <td
         key={el}
         className={code[el] ? "box active" : "box"}
-        onClick={() => this.turnActive(el)}
+        onClick={() => this.props.addHabit(el)}
+        // onClick={() => this.turnActive(el)}
       />
     ));
   };
@@ -65,4 +76,21 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  user: state.user,
+  habits: state.data
+});
+
+const mapDispatchtoProps = dispatch => ({
+  loginUser: data => dispatch(loginUser(data)),
+  logoutUser: user => dispatch(logoutUser(user)),
+  addHabit: data => dispatch(addHabit(data)),
+  removeHabit: data => dispatch(removeHabit(data)),
+  addRecord: data => dispatch(addRecord(data)),
+  removeRecord: data => dispatch(removeRecord(data))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(App);
