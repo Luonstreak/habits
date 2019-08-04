@@ -17,13 +17,22 @@ code {
 }
 .title {
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  margin: 0;
+  margin-right: 10px;
   padding: 0;
-  width: 100px;
+  width: 200px;
   height: 25px;
-  border: 1px solid #F1F1F1;
+  border: 1px solid #FFF;
+}
+
+.link {
+  color: lightgray;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: darkgray;
 }
 
 .header-box {
@@ -35,7 +44,7 @@ code {
   padding: 0;
   width: 25px;
   height: 25px;
-  border: 1px solid #F1F1F1;
+  border: 1px solid #FFF;
 }
 
 .box {

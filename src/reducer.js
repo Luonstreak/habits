@@ -1,4 +1,11 @@
-import { ADD_HABIT, REMOVE_HABIT, ADD_RECORD, REMOVE_RECORD, LOGIN_USER, LOGOUT_USER } from "./actionTypes";
+import {
+  ADD_HABIT,
+  REMOVE_HABIT,
+  ADD_RECORD,
+  REMOVE_RECORD,
+  LOGIN_USER,
+  LOGOUT_USER
+} from "./actionTypes";
 
 const intialState = {
   user: {},
@@ -8,7 +15,15 @@ const intialState = {
 const reducer = (state = intialState, action) => {
   switch (action.type) {
     case ADD_HABIT:
-      return state;
+      return {
+        ...state,
+        habits: {
+          ...state.habits,
+          [action.payload]: {
+            title: action.payload
+          }
+        }
+      };
     case REMOVE_HABIT:
       return state;
     case ADD_RECORD:
@@ -22,5 +37,5 @@ const reducer = (state = intialState, action) => {
     default:
       return state;
   }
-}
+};
 export default reducer;
