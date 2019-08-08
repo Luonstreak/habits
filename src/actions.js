@@ -1,8 +1,8 @@
 import {
-  ADD_HABIT,
-  REMOVE_HABIT,
-  ADD_RECORD,
-  REMOVE_RECORD,
+  CREATE_HABIT,
+  DELETE_HABIT,
+  CREATE_RECORD,
+  DELETE_RECORD,
   LOGIN_USER,
   LOGOUT_USER
 } from "./actionTypes";
@@ -17,22 +17,22 @@ export const logoutUser = credentials => ({
   payload: credentials
 });
 
-export const addHabit = newHabit => ({
-  type: ADD_HABIT,
+export const createHabit = newHabit => ({
+  type: CREATE_HABIT,
   payload: newHabit
 });
 
-export const removeHabit = HabitID => ({
-  type: REMOVE_HABIT,
+export const deleteHabit = HabitID => ({
+  type: DELETE_HABIT,
   payload: HabitID
 });
 
-export const addRecord = newRecord => ({
-  type: ADD_RECORD,
-  payload: newRecord
+export const createRecord = data => ({
+  type: CREATE_RECORD,
+  payload: data
 });
 
-export const removeRecord = recordID => ({
-  type: REMOVE_RECORD,
+export const deleteRecord = recordID => ({
+  type: DELETE_RECORD,
   payload: recordID
 });

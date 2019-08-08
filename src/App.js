@@ -1,15 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as firebase from "firebase/app";
+import { range } from "lodash";
 import {
   loginUser,
   logoutUser,
-  addHabit,
-  removeHabit,
-  addRecord,
-  removeRecord
+  createHabit,
+  deleteHabit,
+  createRecord,
+  deleteRecord
 } from "./actions";
 import "./index.css";
+
+import Habit from "./Habit";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZYJevoS9QkVpxGGeDFLgw2RDhn3PU59o",
@@ -22,28 +25,6 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-const Habit = data => {
-  // var test = Date.now();
-  //  function formatDate(date) {
-  //   var newDate = new Date(date);
-  //   return newDate.getMonth();
-  // }
-  // console.log(formatDate(test));
-
-  return (
-    <tr>
-      <td className="title">{data.data.title}</td>
-      {[...Array(32).keys()].map(day => (
-        <td
-          key={day}
-          className={false ? "box active" : "box"}
-          onClick={() => {}}
-        />
-      ))}
-    </tr>
-  );
-};
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -52,25 +33,32 @@ class App extends React.Component {
     };
   }
 
+  handleTextChange = e => {
+    this.setState({ ...this.state, textInput: e.target.value });
+  };
+
   renderHabits = () => {
     const { habits } = this.props;
     if (!habits) {
       return null;
     } else {
       return Object.keys(habits).map(key => (
-        <Habit key={key} data={habits[key]} />
+        <Habit
+          key={key}
+          data={habits[key]}
+          createNewEntry={(habitName, day) =>
+            this.props.createRecord({habitName, day})
+          }
+          deleteHabit={habitName => this.props.deleteHabit(habitName)}
+        />
       ));
     }
-  };
-
-  handleTextChange = e => {
-    this.setState({ ...this.state, textInput: e.target.value });
   };
 
   createHabit = () => {
     const { textInput } = this.state;
     if (textInput) {
-      this.props.addHabit(textInput);
+      this.props.createHabit(textInput);
     }
   };
 
@@ -106,7 +94,7 @@ class App extends React.Component {
           <thead>
             <tr>
               <td className="title">HABIT</td>
-              {[...Array(32).keys()].map(el => (
+              {range(1, 31, 1).map(el => (
                 <td key={el} className="header-box">
                   <h1>{el}</h1>
                 </td>
@@ -131,13 +119,20 @@ const mapStateToProps = state => ({
 const mapDispatchtoProps = dispatch => ({
   loginUser: data => dispatch(loginUser(data)),
   logoutUser: user => dispatch(logoutUser(user)),
-  addHabit: data => dispatch(addHabit(data)),
-  removeHabit: data => dispatch(removeHabit(data)),
-  addRecord: data => dispatch(addRecord(data)),
-  removeRecord: data => dispatch(removeRecord(data))
+  createHabit: data => dispatch(createHabit(data)),
+  deleteHabit: data => dispatch(deleteHabit(data)),
+  createRecord: data => dispatch(createRecord(data)),
+  deleteRecord: data => dispatch(deleteRecord(data))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchtoProps
 )(App);
+
+// 2 render habits per day accuratelly local.
+// 5 api call create habit.
+// 6 api call add entry to habit.
+// 7 api call delete habit.
+// 8 see reports
+// 9 authentication

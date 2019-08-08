@@ -3,9 +3,9 @@ export const LOGIN_USER = "LOGIN_USER";
 export const LOGOUT_USER = "LOGOUT_USER";
 
 // HABITS
-export const ADD_HABIT = "ADD_HABIT";
-export const REMOVE_HABIT = "REMOVE_HABIT";
+export const CREATE_HABIT = "CREATE_HABIT";
+export const DELETE_HABIT = "DELETE_HABIT";
 
 // RECORDS
-export const ADD_RECORD = "ADD_RECORD";
-export const REMOVE_RECORD = "REMOVE_RECORD";
+export const CREATE_RECORD = "CREATE_RECORD";
+export const DELETE_RECORD = "RECORD_RECORD";
