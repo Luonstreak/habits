@@ -7,49 +7,60 @@ import {
   LOGOUT_USER
 } from "./actionTypes";
 
-const intialState = {
-  user: {},
-  habits: {}
-};
+const intialState = {};
 
 const reducer = (state = intialState, action) => {
+  const month = new Date(Date.now()).getMonth() + 1;
   switch (action.type) {
     case CREATE_HABIT:
       return {
         ...state,
-        habits: {
-          ...state.habits,
-          [action.payload]: {
-            title: action.payload,
-            records: {}
-          }
-        }
+        [action.payload]: {}
       };
     case DELETE_HABIT:
-      return {
-        ...state,
-        habits: Object.keys(state.habits)
-          .filter(elem => {
-            return elem !== action.payload;
-          })
-          .reduce((acc, curr) => {
-            acc[curr] = state.habits[curr];
-            return acc;
-          }, {})
-      };
+      return Object.keys(state)
+        .filter(key => key !== action.payload)
+        .reduce((obj, key) => {
+          obj[key] = state[key];
+          return obj;
+        }, {});
     case CREATE_RECORD:
       const { habitName, day } = action.payload;
-      const month = new Date(Date.now()).getMonth() + 1;
-      return {
-        ...state,
-        habits: {
-          ...state.habits,
+      if (state[habitName][month] && state[habitName][month][day]) {
+        return {
+          ...state,
           [habitName]: {
-            title: state.habits[habitName].title,
-            records: {}
+            ...state[habitName],
+            [month]: Object.keys(state[habitName][month])
+              .filter(key => parseInt(key) !== day)
+              .reduce((obj, key) => {
+                obj[key] = true;
+                return obj;
+              }, {})
           }
+        };
+      } else {
+        if (state[habitName][month]) {
+          return {
+            ...state,
+            [habitName]: {
+              ...state[habitName],
+              [month]: {
+                ...state[habitName][month],
+                [day]: true
+              }
+            }
+          };
+        } else {
+          return {
+            ...state,
+            [habitName]: {
+              ...state[habitName],
+              [month]: { [day]: true }
+            }
+          };
         }
-      };
+      }
     case DELETE_RECORD:
       return state;
     case LOGIN_USER:

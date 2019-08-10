@@ -38,16 +38,17 @@ class App extends React.Component {
   };
 
   renderHabits = () => {
-    const { habits } = this.props;
-    if (!habits) {
+    const { store } = this.props
+    if (!store) {
       return null;
     } else {
-      return Object.keys(habits).map(key => (
+      return Object.keys(store).map(key => (
         <Habit
           key={key}
-          data={habits[key]}
+          title={key}
+          data={store[key]}
           createNewEntry={(habitName, day) =>
-            this.props.createRecord({habitName, day})
+            this.props.createRecord({ habitName, day })
           }
           deleteHabit={habitName => this.props.deleteHabit(habitName)}
         />
@@ -60,6 +61,7 @@ class App extends React.Component {
     if (textInput) {
       this.props.createHabit(textInput);
     }
+    this.setState({ ...this.state, textInput: "" });
   };
 
   renderAddLink = () => (
@@ -72,14 +74,7 @@ class App extends React.Component {
             this.handleTextChange(e);
           }}
         />
-        <button
-          onClick={() => {
-            this.createHabit();
-            this.setState({ ...this.state, textInput: "" });
-          }}
-        >
-          ADD
-        </button>
+        <button onClick={() => this.createHabit()}>ADD</button>
       </td>
     </tr>
   );
@@ -112,8 +107,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user,
-  habits: state.habits
+  store: state
 });
 
 const mapDispatchtoProps = dispatch => ({

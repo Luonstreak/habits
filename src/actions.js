@@ -17,9 +17,9 @@ export const logoutUser = credentials => ({
   payload: credentials
 });
 
-export const createHabit = newHabit => ({
+export const createHabit = habitName => ({
   type: CREATE_HABIT,
-  payload: newHabit
+  payload: habitName
 });
 
 export const deleteHabit = HabitID => ({
