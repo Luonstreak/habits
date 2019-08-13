@@ -1,8 +1,7 @@
 import {
   CREATE_HABIT,
   DELETE_HABIT,
-  CREATE_RECORD,
-  DELETE_RECORD,
+  UPDATE_RECORD,
   LOGIN_USER,
   LOGOUT_USER
 } from "./actionTypes";
@@ -28,11 +27,6 @@ export const deleteHabit = HabitID => ({
 });
 
 export const createRecord = data => ({
-  type: CREATE_RECORD,
+  type: UPDATE_RECORD,
   payload: data
-});
-
-export const deleteRecord = recordID => ({
-  type: DELETE_RECORD,
-  payload: recordID
 });

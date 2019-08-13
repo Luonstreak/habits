@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as firebase from "firebase/app";
+import "firebase/auth";
 import { range } from "lodash";
 import {
   loginUser,
@@ -8,7 +9,6 @@ import {
   createHabit,
   deleteHabit,
   createRecord,
-  deleteRecord
 } from "./actions";
 import "./index.css";
 
@@ -29,7 +29,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      textInput: ""
+      textInput: "",
     };
   }
 
@@ -38,15 +38,15 @@ class App extends React.Component {
   };
 
   renderHabits = () => {
-    const { store } = this.props
-    if (!store) {
-      return null;
+    const { records } = this.props;
+    if (!records) {
+      return <h1>Start by adding a habit below</h1>;
     } else {
-      return Object.keys(store).map(key => (
+      return Object.keys(records).map(key => (
         <Habit
           key={key}
           title={key}
-          data={store[key]}
+          data={records[key]}
           createNewEntry={(habitName, day) =>
             this.props.createRecord({ habitName, day })
           }
@@ -80,10 +80,56 @@ class App extends React.Component {
   );
 
   render() {
+    if (!this.props.user) {
+      const provider = new firebase.auth.FacebookAuthProvider();
+
+      return (
+        <div className="container">
+          <div className="header">
+            <h1>PLEASE LOGIN</h1>
+            <button
+              id="facebook-btn"
+              onClick={() => {
+                firebase
+                  .auth()
+                  .signInWithRedirect(provider)
+                  .then(({ user, credential: { accessToken } }) => {
+                    this.props.loginUser(user, accessToken);
+                    console.log("*** LOGGED IN ***", user);
+                  })
+                  .catch(function(error) {
+                    console.log("*** LOGGIN ERROR ***", error);
+                  });
+              }}
+            >
+              FACEBOOK LOGIN
+            </button>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="container">
         <div className="header">
           <h2>HABIT TRACKER</h2>
+          {this.props.user && (
+            <button
+              onClick={() => {
+                firebase
+                  .auth()
+                  .signOut()
+                  .then(function() {
+                    this.props.logoutUser();
+                    console.log("*** LOGGED OUT ***");
+                  })
+                  .catch(function(error) {
+                    console.log("*** LOGGOUT ERROR ***", error);
+                  });
+              }}
+            >
+              LOGOUT
+            </button>
+          )}
         </div>
         <table>
           <thead>
@@ -106,17 +152,17 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  store: state
+const mapStateToProps = ({ records, user }) => ({
+  records,
+  user
 });
 
 const mapDispatchtoProps = dispatch => ({
-  loginUser: data => dispatch(loginUser(data)),
+  loginUser: (user, token) => dispatch(loginUser({ user, token })),
   logoutUser: user => dispatch(logoutUser(user)),
   createHabit: data => dispatch(createHabit(data)),
   deleteHabit: data => dispatch(deleteHabit(data)),
-  createRecord: data => dispatch(createRecord(data)),
-  deleteRecord: data => dispatch(deleteRecord(data))
+  createRecord: data => dispatch(createRecord(data))
 });
 
 export default connect(
@@ -124,7 +170,6 @@ export default connect(
   mapDispatchtoProps
 )(App);
 
-// 2 render habits per day accuratelly local.
 // 5 api call create habit.
 // 6 api call add entry to habit.
 // 7 api call delete habit.

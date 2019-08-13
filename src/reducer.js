@@ -1,8 +1,7 @@
 import {
   CREATE_HABIT,
   DELETE_HABIT,
-  CREATE_RECORD,
-  DELETE_RECORD,
+  UPDATE_RECORD,
   LOGIN_USER,
   LOGOUT_USER
 } from "./actionTypes";
@@ -24,7 +23,7 @@ const reducer = (state = intialState, action) => {
           obj[key] = state[key];
           return obj;
         }, {});
-    case CREATE_RECORD:
+    case UPDATE_RECORD:
       const { habitName, day } = action.payload;
       if (state[habitName][month] && state[habitName][month][day]) {
         return {
@@ -61,12 +60,14 @@ const reducer = (state = intialState, action) => {
           };
         }
       }
-    case DELETE_RECORD:
-      return state;
     case LOGIN_USER:
-      return state;
+      return {
+        ...state,
+        user: action.payload.user,
+        facebook_token: action.payload.token
+      };
     case LOGOUT_USER:
-      return state;
+      return { ...state, user: null };
     default:
       return state;
   }

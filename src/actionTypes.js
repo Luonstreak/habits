@@ -7,5 +7,4 @@ export const CREATE_HABIT = "CREATE_HABIT";
 export const DELETE_HABIT = "DELETE_HABIT";
 
 // RECORDS
-export const CREATE_RECORD = "CREATE_RECORD";
-export const DELETE_RECORD = "RECORD_RECORD";
+export const UPDATE_RECORD = "UPDATE_RECORD";
